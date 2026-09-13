@@ -1,0 +1,255 @@
+body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #fafafa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+.container {
+  background: white;
+  border-radius: 24px;
+  padding: 16px 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  view-transition-name: container;
+  width: 400px;
+  height: fit-content;
+}
+
+.list-header {
+  font-size: 20px;
+  font-weight: 500;
+  color: #18181b;
+  margin-bottom: 24px;
+  padding-left: 12px;
+  view-transition-name: list-header;
+  height: fit-content;
+  overflow: hidden;
+}
+
+.close-button {
+  display: none;
+  justify-content: flex-end;
+  view-transition-name: close-button;
+}
+
+.not-expanded {
+  view-transition-class: not-expanded;
+
+  * {
+    view-transition-class: not-expanded;
+  }
+}
+
+.container:has(.not-expanded) :is(.list-header, .all-transactions) {
+  view-transition-class: not-expanded;
+}
+
+.container:has(.expanded) {
+  .list-header {
+    display: none;
+  }
+
+  .close-button {
+    display: flex;
+  }
+
+  .all-transactions {
+    display: none;
+  }
+
+  .transaction:not(.expanded) {
+    display: none;
+  }
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  view-transition-name: transaction-list;
+}
+
+.transaction {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  border-radius: 16px;
+  cursor: pointer;
+
+  &.expanded {
+    flex-direction: column;
+    align-items: flex-start;
+    background: #ffffff;
+
+    .transaction-details, 
+    .payment-details {
+      display: flex;
+    }
+
+    .icon-container {
+      width: 100%;
+
+      .close-btn {
+        display: flex;
+      }
+    }
+  }
+}
+
+.title-container {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  background: #18181b;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+}
+
+.icon svg {
+  width: 20px;
+  height: 20px;
+  color: white;
+}
+
+.details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex: 1;
+  width: 100%;
+}
+
+.title {
+  font-weight: 500;
+  color: #18181b;
+  margin-bottom: 4px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #71717a;
+}
+
+.amount {
+  font-weight: 500;
+  color: #71717a;
+}
+
+.transaction-details, 
+.payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #71717a;
+  border-top: 1px dotted #71717a;
+  padding-top: 6px;
+  width: 100%;
+  display: none;
+}
+
+.transaction-details {
+  view-transition-class: transaction-details;
+}
+
+.payment-details {
+  view-transition-class: payment-details;
+}
+
+.all-transactions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: #18181b;
+  font-weight: 500;
+  margin-top: 8px;
+  cursor: pointer;
+  view-transition-name: all-transactions;
+}
+
+.close-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #f4f4f5;
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    margin-top: 30px;
+  }
+  to {
+    opacity: 1;
+    margin-top: 0;
+  }
+}
+
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes squash {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0);
+  }
+}
+
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+::view-transition-old(*),
+::view-transition-new(*) {
+  height: 100%;
+}
+
+html:active-view-transition-type(expand) {
+  &::view-transition-group(.transaction-details),
+  &::view-transition-group(.payment-details) {
+    animation-name: slide-up;
+    animation-duration: 0.5s;
+  }
+
+}
+
+html:active-view-transition-type(collapse) {
+  &::view-transition-group(.transaction-details),
+  &::view-transition-group(.payment-details) {
+    animation-name: fade-out;
+  }
+}
+
+::view-transition-group(.not-expanded) {
+  animation-name: fade-out;
+}
